@@ -1,0 +1,243 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>最优化方法：一阶优化算法之梯度下降法 | 君苏依寂</title><meta name="author" content="君苏"><meta name="copyright" content="君苏"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最优化方法之一阶优化算法梯度下降法 要理解梯度下降法，先理解损失函数，所以我先写损失函数  损失函数 损失函数有三个关键思路：最小二乘法，极大似然估计，交叉熵  最小二乘法 最小二乘法（又称最小平方法）是一种数值优化方法。它通过最小化误差平方和来寻找数据的最佳函数匹配。利用最小二乘法可以简便地求得未知的数据，并使得这些求得的数据与实际数据之间误差的平方和为最小。 最小二乘法适用于所选择的回归模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最优化方法：一阶优化算法之梯度下降法">
+<meta property="og:url" content="https://junsuyiji.github.io/2022/01/15/%E6%9C%80%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%EF%BC%9A%E4%B8%80%E9%98%B6%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E4%B9%8B%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95/index.html">
+<meta property="og:site_name" content="君苏依寂">
+<meta property="og:description" content="最优化方法之一阶优化算法梯度下降法 要理解梯度下降法，先理解损失函数，所以我先写损失函数  损失函数 损失函数有三个关键思路：最小二乘法，极大似然估计，交叉熵  最小二乘法 最小二乘法（又称最小平方法）是一种数值优化方法。它通过最小化误差平方和来寻找数据的最佳函数匹配。利用最小二乘法可以简便地求得未知的数据，并使得这些求得的数据与实际数据之间误差的平方和为最小。 最小二乘法适用于所选择的回归模型">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://t7.baidu.com/it/u=2436227069,3954169160&fm=193&f=GIF">
+<meta property="article:published_time" content="2022-01-15T01:33:58.000Z">
+<meta property="article:modified_time" content="2022-01-15T01:41:11.431Z">
+<meta property="article:author" content="君苏">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://t7.baidu.com/it/u=2436227069,3954169160&fm=193&f=GIF"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://junsuyiji.github.io/2022/01/15/%E6%9C%80%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%EF%BC%9A%E4%B8%80%E9%98%B6%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E4%B9%8B%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '最优化方法：一阶优化算法之梯度下降法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-01-15 09:41:11'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/junsuyiji/tuchang@master/Cache_5abb6ea9476d7651.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://t7.baidu.com/it/u=2436227069,3954169160&amp;fm=193&amp;f=GIF')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">君苏依寂</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">最优化方法：一阶优化算法之梯度下降法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-15T01:33:58.000Z" title="发表于 2022-01-15 09:33:58">2022-01-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-15T01:41:11.431Z" title="更新于 2022-01-15 09:41:11">2022-01-15</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="最优化方法：一阶优化算法之梯度下降法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="最优化方法之一阶优化算法梯度下降法"><a class="markdownIt-Anchor" href="#最优化方法之一阶优化算法梯度下降法"></a> 最优化方法之一阶优化算法梯度下降法</h1>
+<p>要理解梯度下降法，先理解损失函数，所以我先写损失函数</p>
+<h2 id="损失函数"><a class="markdownIt-Anchor" href="#损失函数"></a> 损失函数</h2>
+<p>损失函数有三个关键思路：最小二乘法，极大似然估计，交叉熵</p>
+<h3 id="最小二乘法"><a class="markdownIt-Anchor" href="#最小二乘法"></a> 最小二乘法</h3>
+<p>最小二乘法（又称<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E6%9C%80%E5%B0%8F%E5%B9%B3%E6%96%B9%E6%B3%95&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22article%22%2C%22sourceId%22%3A%2236309014%22%7D">最小平方法</a>）是一种数值优化方法。它通过最小化误差平方和来寻找数据的最佳函数匹配。利用最小二乘法可以简便地求得未知的数据，并使得这些求得的数据与实际数据之间误差的平方和为最小。</p>
+<p>最小二乘法适用于所选择的回归模型应该使所有观察值的残差平方和达到最小，也就是能够采用<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E5%B9%B3%E6%96%B9%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0&amp;search_source=Entity&amp;hybrid_search_source=Entity&amp;hybrid_search_extra=%7B%22sourceType%22%3A%22article%22%2C%22sourceId%22%3A%2236309014%22%7D">平方损失函数</a>。</p>
+<p>最小二乘法的原则是以“残差平方和最小（均方损失函数）”确定直线位置。用最小二乘法除了计算比较方便外，得到的估计量还具有优良特性。这种方法对异常值非常敏感。</p>
+<p><strong>对“离群点”非常敏感。</strong></p>
+<h3 id="极大似然估计mle"><a class="markdownIt-Anchor" href="#极大似然估计mle"></a> 极大似然估计MLE</h3>
+<p><strong>利用已知的样本结果信息，反推最具有可能（最大概率）导致这些样本结果出现的模型参数值！</strong></p>
+<p>换句话说，极大似然估计提供了一种给定观察数据来评估模型参数的方法，即：“模型已定，参数未知”。</p>
+<p>最大似然估计的计算步骤：</p>
+<p>（1）写出似然函数；</p>
+<p>（2）对似然函数<strong>取对数</strong>，并整理；</p>
+<p>（3）求导数；</p>
+<p>（4）解似然方程。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/junsuyiji/tuchang@master/1.jpg" alt></p>
+<h3 id="交叉熵"><a class="markdownIt-Anchor" href="#交叉熵"></a> 交叉熵</h3>
+<p>交叉熵定义与两个概率分布之上，反映了他们之间的差异程度。</p>
+<p>相对熵(即KL散度)<br>
+相对熵又称互熵，设p ( x ) p(x)p(x)和q ( x ) q(x)q(x)是取值的两个概率分布，相对熵用来表示两个概率分布的差异，当两个随机分布相同时，它们的相对熵为零，当两个随机分布的差别增大时，它们的相对熵也会增大<br>
+<img src="https://img-blog.csdnimg.cn/20201019124521788.png#pic_center" alt="在这里插入图片描述"></p>
+<ol>
+<li><strong>将相对熵展开可以得到如下：</strong><br>
+<img src="https://img-blog.csdnimg.cn/20201019124846806.png#pic_center" alt="在这里插入图片描述"><br>
+<img src="https://img-blog.csdnimg.cn/20201019125037134.png#pic_center" alt="在这里插入图片描述"><br>
+由上式可知，相对熵=交叉熵-信息熵，H(p,q)就是交叉熵：</li>
+</ol>
+<p><img src="https://img-blog.csdnimg.cn/20201019131526518.png#pic_center" alt="在这里插入图片描述"><br>
+由于在机器学习和深度学习中，样本和标签已知（即p已知），那么信息熵H（p）相当于常量，此时，只需拟合交叉熵，使交叉熵拟合为0即可。</p>
+<h3 id="交叉熵和最大似然估计"><a class="markdownIt-Anchor" href="#交叉熵和最大似然估计"></a> 交叉熵和最大似然估计</h3>
+<p>形式一样，<strong>但是交叉熵是已经有了两个确定的分布，然后来计算两个分布之间的差距。而最大似然是我已经有了一些观察数据，希望求解出一个分布来最大化的出现观测数据。区别是一个分布已知一个是未知。</strong></p>
+<h2 id="梯度下降"><a class="markdownIt-Anchor" href="#梯度下降"></a> 梯度下降</h2>
+<p><strong>梯度下降是一个用来求函数最小值的算法，我们将使用梯度下降算法来求出损失函数的最小值。</strong></p>
+<p><strong>梯度下降背后的思想是：</strong></p>
+<p><strong>开始时我们随机选择一个参数的组合，计算损失函数，然后我们寻找下一个能让损失函数值下降最多的参数组合。我们持续这么做直到到到一个局部最小值，因为我们并没有尝试完所有的参数组合，所以不能确定我们得到的局部最小值是否便是全局最小值，选择不同的初始参数组合，可能会找到不同的局部最小值</strong></p>
+<p><strong>梯度下降法，用来最小化损失函数的方法</strong></p>
+<h4 id="迭代公式"><a class="markdownIt-Anchor" href="#迭代公式"></a> 迭代公式</h4>
+<p>假设希望求解目标函数  <img src="https://www.zhihu.com/equation?tex=f%28%5Cbold%7Bx%7D%29%3Df%28x_%7B1%7D%2C%5Ccdots%2Cx_%7Bn%7D%29" alt="[公式]"> 的最小值，可以从一个初始点  <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D%5E%7B%280%29%7D%3D%28x_%7B1%7D%5E%7B%280%29%7D%2C%5Ccdots%2Cx_%7Bn%7D%5E%7B%280%29%7D%29" alt="[公式]"> 开始，基于学习率  <img src="https://www.zhihu.com/equation?tex=%5Ceta%3E0" alt="[公式]"> 构建一个迭代过程：当  <img src="https://www.zhihu.com/equation?tex=i%5Cgeq+0" alt="[公式]"> 时，</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Beqnarray%2A%7D+x_%7B1%7D%5E%7B%28i%2B1%29%7D+%26%3D%26+x_%7B1%7D%5E%7B%28i%29%7D+-+%5Ceta%5Ccdot+%5Cfrac%7B%5Cpartial+f%7D%7B%5Cpartial+x_%7B1%7D%7D%28%5Cbold%7Bx%7D%5E%7B%28i%29%7D%29%2C+%5C%5C+%26%5Ccdots%26+%5C%5C+x_%7Bn%7D%5E%7B%28i%2B1%29%7D+%26%3D%26+x_%7Bn%7D%5E%7B%28i%29%7D+-+%5Ceta%5Ccdot+%5Cfrac%7B%5Cpartial+f%7D%7B%5Cpartial+x_%7Bn%7D%7D%28%5Cbold%7Bx%7D%5E%7B%28i%29%7D%29.+%5Cend%7Beqnarray%2A%7D" alt="[公式]"></p>
+<p>其中  <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D%5E%7B%28i%29%7D+%3D+%28x_%7B1%7D%5E%7B%28i%29%7D%2C%5Ccdots%2Cx_%7Bn%7D%5E%7B%28i%29%7D%29" alt="[公式]"> ，一旦达到收敛条件的话，迭代就结束。从梯度下降法的迭代公式来看，下一个点的选择与当前点的位置和它的梯度相关。反之，如果要计算函数 <img src="https://www.zhihu.com/equation?tex=f%28%5Cbold%7Bx%7D%29%3Df%28x_%7B1%7D%2C%5Ccdots%2Cx_%7Bn%7D%29" alt="[公式]"> 的最大值，沿着梯度的反方向前进即可，也就是说：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Beqnarray%2A%7D+x_%7B1%7D%5E%7B%28i%2B1%29%7D+%26%3D%26+x_%7B1%7D%5E%7B%28i%29%7D+%2B+%5Ceta%5Ccdot+%5Cfrac%7B%5Cpartial+f%7D%7B%5Cpartial+x_%7B1%7D%7D%28%5Cbold%7Bx%7D%5E%7B%28i%29%7D%29%2C+%5C%5C+%26%5Ccdots%26+%5C%5C+x_%7Bn%7D%5E%7B%28i%2B1%29%7D+%26%3D%26+x_%7Bn%7D%5E%7B%28i%29%7D+%2B+%5Ceta%5Ccdot+%5Cfrac%7B%5Cpartial+f%7D%7B%5Cpartial+x_%7Bn%7D%7D%28%5Cbold%7Bx%7D%5E%7B%28i%29%7D%29.+%5Cend%7Beqnarray%2A%7D" alt="[公式]"></p>
+<p>其中  <img src="https://www.zhihu.com/equation?tex=%5Cbold%7Bx%7D%5E%7B%28i%29%7D+%3D+%28x_%7B1%7D%5E%7B%28i%29%7D%2C%5Ccdots%2Cx_%7Bn%7D%5E%7B%28i%29%7D%29" alt="[公式]"> 。整体来看，无论是计算函数的最大值或者最小值，都需要构建一个迭代关系  <img src="https://www.zhihu.com/equation?tex=g" alt="[公式]"> ，那就是：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Beqnarray%2A%7D+%5Cbold%7Bx%7D%5E%7B%280%29%7D+%5Cstackrel%7Bg%7D%7B%5Clongrightarrow%7D+%5Cbold%7Bx%7D%5E%7B%281%29%7D+%5Cstackrel%7Bg%7D%7B%5Clongrightarrow%7D+%5Cbold%7Bx%7D%5E%7B%282%29%7D+%5Cstackrel%7Bg%7D%7B%5Clongrightarrow%7D+%5Ccdots%2C+%5Cend%7Beqnarray%2A%7D" alt="[公式]"></p>
+<p>也就是说对于所有的  <img src="https://www.zhihu.com/equation?tex=i%5Cgeq+0" alt="[公式]"> ，都满足迭代关系  <img src="https://www.zhihu.com/equation?tex=x%5E%7B%28i%2B1%29%7D%3Dg%28x%5E%7B%28i%29%7D%29" alt="[公式]"> 。所以，在以上的两个方法中，我们可以写出函数  <img src="https://www.zhihu.com/equation?tex=g" alt="[公式]"> 的表达式为：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Beqnarray%2A%7D+g%28%5Cbold%7Bx%7D%29%3D%5Cbegin%7Bcases%7D+%5Cbold%7Bx%7D+-+%5Ceta%5Cnabla+f%28%5Cbold%7Bx%7D%29+%26%5Ctext%7B%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95%7D%2C%5C%5C+%5Cbold%7Bx%7D+%2B+%5Ceta%5Cnabla+f%28%5Cbold%7Bx%7D%29+%26%5Ctext%7B%E6%A2%AF%E5%BA%A6%E4%B8%8A%E5%8D%87%E6%B3%95%7D.+%5Cend%7Bcases%7D+%5Cend%7Beqnarray%2A%7D" alt="[公式]"></p>
+<h2 id="梯度下降法的改进"><a class="markdownIt-Anchor" href="#梯度下降法的改进"></a> 梯度下降法的改进</h2>
+<p>未完待续</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">君苏</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://junsuyiji.github.io/2022/01/15/%E6%9C%80%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%EF%BC%9A%E4%B8%80%E9%98%B6%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E4%B9%8B%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95/">https://junsuyiji.github.io/2022/01/15/%E6%9C%80%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%EF%BC%9A%E4%B8%80%E9%98%B6%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E4%B9%8B%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://junsuyiji.github.io" target="_blank">君苏依寂</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://t7.baidu.com/it/u=2436227069,3954169160&amp;fm=193&amp;f=GIF" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/01/10/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/junsuyiji/tuchang@master/v2-134ac10c9e04d176fb35e043ddad67d0_xl.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">矩阵分解</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/junsuyiji/tuchang@master/Cache_5abb6ea9476d7651.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">君苏</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E4%B9%8B%E4%B8%80%E9%98%B6%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 最优化方法之一阶优化算法梯度下降法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text"> 损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95"><span class="toc-number">1.1.1.</span> <span class="toc-text"> 最小二乘法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1mle"><span class="toc-number">1.1.2.</span> <span class="toc-text"> 极大似然估计MLE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E7%86%B5"><span class="toc-number">1.1.3.</span> <span class="toc-text"> 交叉熵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E7%86%B5%E5%92%8C%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="toc-number">1.1.4.</span> <span class="toc-text"> 交叉熵和最大似然估计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D"><span class="toc-number">1.2.</span> <span class="toc-text"> 梯度下降</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3%E5%85%AC%E5%BC%8F"><span class="toc-number">1.2.0.1.</span> <span class="toc-text"> 迭代公式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95%E7%9A%84%E6%94%B9%E8%BF%9B"><span class="toc-number">1.3.</span> <span class="toc-text"> 梯度下降法的改进</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/01/15/%E6%9C%80%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%EF%BC%9A%E4%B8%80%E9%98%B6%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E4%B9%8B%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95/" title="最优化方法：一阶优化算法之梯度下降法"><img src="https://t7.baidu.com/it/u=2436227069,3954169160&amp;fm=193&amp;f=GIF" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="最优化方法：一阶优化算法之梯度下降法"/></a><div class="content"><a class="title" href="/2022/01/15/%E6%9C%80%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%EF%BC%9A%E4%B8%80%E9%98%B6%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95%E4%B9%8B%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95/" title="最优化方法：一阶优化算法之梯度下降法">最优化方法：一阶优化算法之梯度下降法</a><time datetime="2022-01-15T01:33:58.000Z" title="发表于 2022-01-15 09:33:58">2022-01-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/10/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3/" title="矩阵分解"><img src="https://cdn.jsdelivr.net/gh/junsuyiji/tuchang@master/v2-134ac10c9e04d176fb35e043ddad67d0_xl.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="矩阵分解"/></a><div class="content"><a class="title" href="/2022/01/10/%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3/" title="矩阵分解">矩阵分解</a><time datetime="2022-01-10T07:25:11.000Z" title="发表于 2022-01-10 15:25:11">2022-01-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/09/%E6%8E%92%E5%BA%8F%E6%80%BB%E7%BB%93/" title="排序总结"><img src="https://img2.baidu.com/it/u=3072300035,1075004272&amp;fm=26&amp;fmt=auto" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="排序总结"/></a><div class="content"><a class="title" href="/2021/12/09/%E6%8E%92%E5%BA%8F%E6%80%BB%E7%BB%93/" title="排序总结">排序总结</a><time datetime="2021-12-09T03:44:44.000Z" title="发表于 2021-12-09 11:44:44">2021-12-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/04/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" title="逻辑回归"><img src="https://img2.baidu.com/it/u=1834632775,3246576297&amp;fm=26&amp;fmt=auto" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="逻辑回归"/></a><div class="content"><a class="title" href="/2021/12/04/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" title="逻辑回归">逻辑回归</a><time datetime="2021-12-04T15:31:14.000Z" title="发表于 2021-12-04 23:31:14">2021-12-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/12/04/%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95/" title="查找算法"><img src="https://img1.baidu.com/it/u=2545384739,1392780773&amp;fm=26&amp;fmt=auto" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="查找算法"/></a><div class="content"><a class="title" href="/2021/12/04/%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95/" title="查找算法">查找算法</a><time datetime="2021-12-04T03:07:53.000Z" title="发表于 2021-12-04 11:07:53">2021-12-04</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 君苏</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="true"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/miku.model.json"},"display":{"position":"right","width":180,"height":360},"mobile":{"show":false},"react":{"opacity":1}});</script></body></html>
